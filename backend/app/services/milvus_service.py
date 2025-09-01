@@ -60,7 +60,7 @@ class MilvusService:
                 dimension=self.dimension,
                 primary_field="id",
                 id_type="int64",
-                metric_type="COSINE",  # ✅ COSINE para embeddings RAW
+                metric_type="COSINE",  
                 auto_id=True,
                 description="Face embeddings collection"
             )
@@ -88,7 +88,7 @@ class MilvusService:
         if not utility.has_collection(self.collection_name):
             self.collection = Collection(name=self.collection_name, schema=schema)
             
-            # ✅ CORREÇÃO: Índice otimizado para COSINE
+            # Índice otimizado para COSINE
             index_params = {
                 "metric_type": "COSINE",  # Embeddings RAW com métrica COSINE
                 "index_type": "HNSW",
@@ -121,7 +121,7 @@ class MilvusService:
             True se inserido com sucesso
         """
         try:
-            # ✅ CORREÇÃO: Usar embedding RAW (sem normalização)
+            # Usar embedding RAW (sem normalização)
             # O Milvus com métrica COSINE fará a normalização internamente
             raw_embedding = embedding.astype(np.float32)
             
@@ -163,7 +163,7 @@ class MilvusService:
         top_k = top_k or settings.top_k_results
         
         try:
-            # ✅ CORREÇÃO: Usar embedding RAW na busca
+            # Usar embedding RAW na busca
             raw_query = query_embedding.astype(np.float32)
             
             logger.debug(f"Buscando com embedding RAW - Norma: {np.linalg.norm(raw_query):.6f}")
@@ -210,7 +210,7 @@ class MilvusService:
         
         for hit in results[0]:
             try:
-                # ✅ MilvusClient retorna 'score' (similaridade [0,1])
+                # MilvusClient retorna 'score' (similaridade [0,1])
                 similarity_score = hit.get("score", 0.0)
                 
                 # Converte para distância coseno [0,2]
